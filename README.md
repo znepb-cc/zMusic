@@ -5,13 +5,13 @@ An open-source music playing software for ComputerCraft, and Computronics' tape 
 ## How to Install
 ### Setting up the server
 **Tested on:**
-Debian 10.2
-PHP 7.0
-nginx 1.14.2
-ffmpeg 4.1.4
-youtube-dl 2020.01.01
-Lionray commit 725032428bfcbd503e53c5cafdd68f14810d0e9a
-
+Debian 10.2  
+PHP 7.0  
+nginx 1.14.2  
+ffmpeg 4.1.4  
+youtube-dl 2020.01.01  
+Lionray commit 725032428bfcbd503e53c5cafdd68f14810d0e9a  
+  
  1. Install a server that supports PHP. This could be Apache,
 nginx, or any other server that supports PHP.   
  2. Install JRE 8 to your server, and ffmpeg. Then, go to /var/www/html or where your server's files are located. 
