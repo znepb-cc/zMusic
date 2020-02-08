@@ -1,6 +1,6 @@
 # zMusic
 An open-source music playing software for ComputerCraft, and Computronics' tape drives.
-**Notice:** This currently only works on [SwitchCraft](https://switchcraft.pw).
+If you are using this on the [SwitchCraft](https://switchcraft.pw) server, please use the `sc` branch.
 
 ## How to Install
 ### Setting up the server
@@ -31,8 +31,6 @@ All you need is a tape drive, a tape (32 mins recommended), and a computer.
  4. In the config, there are several values you must change. 
  5. Change `ip` to the IP of your server, or it's domain.
  6. Change `api-key` to your YouTube Data API v3 key. You can get one [here](https://console.developers.google.com/)
- 7. Change `primary-user` to yourself (you will recieve notifications if an eror occurs)
- 8. Change the first value in `trustedUsers` to your username. This table is a list of users that can run zmusic commands.
 
 ### Playing music
 Now that you're done, try playing some music. Run `zmusic.lua` to get the party started!
@@ -47,10 +45,4 @@ Now that you're done, try playing some music. Run `zmusic.lua` to get the party 
 
 #### Allowing other players to play music
 
-If you want your friends to be able to add their own songs to the queue, do the following:
-
- 1. Run `edit config.lua` to the the config.
- 2. Add a comma to the quote after your name, and then add type `"your friend's name",` below that line.
- 3. Restart zMusic
-
- 
+Plethora does not allow capturing multiple people, so this isn't possible as of now.
