@@ -1,7 +1,9 @@
 
 local config = dofile('config.lua')
+os.loadAPI("json")
 local function log(msg, type)
   if type == nil then type = "default" end
+  local fullMessage = "["..textutils.formatTime(os.time(), false).."] " .. msg
   if term.isColor() then
     if type == "default" then
       term.setTextColor(colors.white)
@@ -12,9 +14,20 @@ local function log(msg, type)
     elseif type == "success" then
       term.setTextColor(colors.lime)
     end
+  else
+    if type == "warning" then
+      fullMessage = "["..textutils.formatTime(os.time(), false).."] [WARN] " .. msg
+    elseif type == "error" then
+      fullMessage = "["..textutils.formatTime(os.time(), false).."] [ERROR] " .. msg
+    elseif type == "success" then
+      fullMessage = "["..textutils.formatTime(os.time(), false).."] [SUCCESS] " .. msg
+    end
   end
-  print("["..textutils.formatTime(os.time(), false).."]", msg)
+  print(fullMessage)
 end
+
+local chat = peripheral.wrap(config.chatboxSize)
+chat.capture("^\\")
 
 local function main()
   local queue = {}
@@ -44,21 +57,17 @@ local function main()
 
   local function play(usr)
     log('Playing: '..queue[1].name)
-    chatbox.tell(usr, "&aNow Playing: &2"..queue[1].name, "zMusic", "", "format")
+    chat.tell("Now Playing: "..queue[1].name)
     tape.play()
   end
 
-  local function stop()
-
-  end
-
   local function search(q, usr)
-    chatbox.tell(usr, "Searching: &7"..q, "zMusic", "", "format")
+    chat.tell("Searching: "..q)
     local formattedQuery = textutils.urlEncode(q)
     log('Searching for '..q)
     local data, error = http.get("https://www.googleapis.com/youtube/v3/search?q="..formattedQuery.."&maxResults=10&part=snippet&key="..config.apiKey)
     if error then
-      chatbox.tell(usr, "&cYouTube returned an error: "..error, "zMusic", "", "format")
+      chat.tell("YouTube returned an error: "..error)
       log('YouTube returned an error: '..error, "error")
     else
       log("Decoding JSON...")
@@ -73,7 +82,7 @@ local function main()
           })
           log("Added to queue", "success")
 
-          chatbox.tell(usr, "&aAdded &2"..item.snippet.title.."&r&a to the queue", "zMusic", "", "format")
+          chat.tell("Added "..item.snippet.title.." to the queue")
           return true
         else
           log("Not OK", "warning")
@@ -100,14 +109,38 @@ local function main()
     return false
   end
 
-  log("Now listening", "success")
+  local function getArgs(str)
+    local args = {}
+    local cstr = ""
+
+    for i = 1, string.len(str) do
+      if str:sub(i, i) == " " then
+        table.insert(args, cstr)
+        cstr = ""
+      else
+        cstr = cstr .. str:sub(i, i)
+      end
+    end
+
+    table.insert(args, cstr)
+    cstr = ""
+
+    return args
+  end
+
   local function eventListener()
+    log("Now listening", "success")
     while true do
       local e = {os.pullEvent()}
-      if e[1] == "command" then
-        local usr, msg, args = e[2], e[3], e[4]
-        if isTrusted(usr) then
-          if msg == "zmusic" then
+      if e[1] == "chat_capture" then
+        local msg, usr = e[2], e[4]
+        local args = getArgs(msg)
+        msg = args[1]
+        for i, v in pairs(args) do
+        end
+        table.remove(args, 1)
+        if true then -- I'm too lazy to go through everything and change it.
+          if msg == "\\zmusic" then
             lastUser = usr
             log("Command received")
             if args[1] == "play" then
@@ -115,7 +148,7 @@ local function main()
               if args[2] ~= nil then
                 nextReady = false
                 local q = ""
-                for i = 2, #args do 
+                for i = 2, #args do
                   q = q..args[i]
                   if args[i+1] then
                     q = q .. " "
@@ -123,15 +156,15 @@ local function main()
                 end
                 search(q, usr)
                 nextReady = true
-              
+
               elseif args[2] == nil then
                 if #queue == 0 then
                   log("The queue is empty", "warning")
-                  chatbox.tell(usr, "&cThe queue is empty", "zMusic", "", "format")
+                  chat.tell("The queue is empty")
                 elseif playing == false then
                   log("Unpausing music", "success")
                   playing = true
-                  chatbox.tell(usr, "&aResumed music", "zMusic", "", "format")
+                  chat.tell("Resumed music")
                   tape.play()
 
                 end
@@ -142,58 +175,58 @@ local function main()
                 tape.stop()
                 playing = false
                 log("Song stopped", "success")
-                chatbox.tell(usr, "&aPasued music. Use \zmusic clear to clear the queue.", "zMusic", "", "format")
+                chat.tell("Pasued music. Use \zmusic clear to clear the queue.")
               elseif playing == false then
                 log("Nothing is playing", "warning")
-                chatbox.tell(usr, "&cNothing is playing", "zMusic", "", "format")
+                chat.tell("Nothing is playing" )
               end
             elseif args[1] == "skip" then
               if queue[2] then
                 stop()
                 tape.seek(queue[1].size)
                 log("Skipping song", "success")
-                chatbox.tell(usr, "&aSkipped song", "zMusic", "", "format")
+                chat.tell("Skipped song")
               else
                 log("Nothing left in queue", "warning")
-                chatbox.tell(usr, "&cThere is nothing left in the queue", "zMusic", "", "format")
+                chat.tell("&cThere is nothing left in the queue")
               end
             elseif args[1] == "queue" then
               if #queue > 0 then
                 log("Sending queue", "success")
                 for i, v in pairs(queue) do
-                  chatbox.tell(usr, "Position: &l"..i.."&r Name: &l"..v.name.."&r ID: &l"..v.id, "zMusic", "", "format")
+                  chat.tell("Position: &l"..i.."&r Name: &l"..v.name.."&r ID: &l"..v.id)
                 end
               else
                 log("The queue is empty", "warning")
-                chatbox.tell(usr, "&cThe queue is empty", "zMusic", "", "format")
+                chatbox.tell("The queue is empty")
               end
             elseif args[1] == "clear" then
               queue = {}
               log("Cleared queue", "success")
-              chatbox.tell(usr, "&aCleared the queue", "zMusic", "", "format")
+              chat.tell("Cleared the queue")
             elseif args[1] == "volume" then
               log('Received set volume')
               if tonumber(args[2]) == nil then
                 if args[2] == "reset" then
                   log("Volume reset", "success")
                   tape.setVolume(1)
-                  chatbox.tell(usr, "&aSet the volume to 1", "zMusic", "", "format")
+                  chat.tell("Set the volume to 1")
                 else
                   log("Volume reset", "warning")
-                  chatbox.tell(usr, "&cNot a number!", "zMusic", "", "format")
+                  chat.tell("Not a number!")
                 end
               else
                 local vol = tonumber(args[2])/10
                 if vol > 1 then
                   log("Volume can not be more than 10", "success")
-                  chatbox.tell(usr, "&cVolume cannot be more than 10", "zMusic", "", "format")
+                  chat.tell("Volume cannot be more than 10")
                 elseif vol < 0.1 then
                   log("Volume can not be less than 1", "success")
-                  chatbox.tell(usr, "&cVolume cannot be less than 1", "zMusic", "", "format")
+                  chat.tell("Volume cannot be less than 1")
                 else
                   log("Volume set to "..vol, "success")
                   tape.setVolume(vol)
-                  chatbox.tell(usr, "&aSet the volume to "..args[2], "zMusic", "", "format")
+                  chat.tell("Set the volume to "..args[2])
                 end
               end
             end
@@ -205,7 +238,6 @@ local function main()
 
   local function queueListener()
     while true do
-      log('[queue] Checking')
       if playing == false and queue[1] ~= nil and nextReady == true then
         log('[queue] Loading next song')
         downloadSong(queue[1].id)
@@ -220,10 +252,8 @@ local function main()
 
   local function endListener()
     while true do
-      
       if queue[1] ~= nil then
         if queue[1].size ~= nil then
-          log('[end] Checking: '..tostring(tape.getPosition() >= queue[1].size))
           if tape.getPosition() >= queue[1].size then
             log('[end] Tape over')
             playing = false
@@ -242,6 +272,7 @@ end
 local ok, err = pcall(main)
 
 if not ok then
-  chatbox.tell(config.primaryUser, "&4Fatal Error: "..err, "zMusic", "", "format")
+  chat.tell("Fatal Error: "..err)
   log("Crashed! "..err, "error")
 end
+
