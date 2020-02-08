@@ -2,6 +2,7 @@
 local config = dofile('config.lua')
 local function log(msg, type)
   if type == nil then type = "default" end
+  local fullMessage = "["..textutils.formatTime(os.time(), false).."] " .. msg
   if term.isColor() then
     if type == "default" then
       term.setTextColor(colors.white)
@@ -12,8 +13,16 @@ local function log(msg, type)
     elseif type == "success" then
       term.setTextColor(colors.lime)
     end
+  else
+    if type == "warning" then
+      fullMessage = "["..textutils.formatTime(os.time(), false).."] [WARN] " .. msg
+    elseif type == "error" then
+      fullMessage = "["..textutils.formatTime(os.time(), false).."] [ERROR] " .. msg
+    elseif type == "success" then
+      fullMessage = "["..textutils.formatTime(os.time(), false).."] [SUCCESS] " .. msg
+    end
   end
-  print("["..textutils.formatTime(os.time(), false).."]", msg)
+  print(fullMessage)
 end
 
 local function main()
