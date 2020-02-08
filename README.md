@@ -1,6 +1,6 @@
 # zMusic
 An open-source music playing software for ComputerCraft, and Computronics' tape drives.
-**Notice:** This currently only works on [SwitchCraft](https://switchcraft.pw).
+If you are not on SwitchCraft, please refer to the `plethora` branch.
 
 ## How to Install
 ### Setting up the server
