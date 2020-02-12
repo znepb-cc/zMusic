@@ -16,7 +16,7 @@ Lionray commit 725032428bfcbd503e53c5cafdd68f14810d0e9a
 nginx, or any other server that supports PHP.   
  2. Install JRE 8 to your server, and ffmpeg. Then, go to /var/www/html or where your server's files are located. 
  3. Download the latest version of youtube-dl, and download the latest version of [LionRay] (https://github.com/gamax92/LionRay).
- 4. Download [https://raw.githubusercontent.com/znepb/zMusic/master/index.php](https://raw.githubusercontent.com/znepb/zMusic/master/index.php) to your server. (It does not have to be /index.php on the server, but it is recommended.
+ 4. Download [https://raw.githubusercontent.com/znepb/zMusic/master/index.php](https://raw.githubusercontent.com/znepb/zMusic-cc/master/index.php) to your server. (It does not have to be /index.php on the server, but it is recommended.
  5. If needed, change `$file`, `$webm`, and `$out` in your PHP file.
  6. Move youtube-dl to the folder where your php file is located, and same with LionRay. Rename LionRay to `lionray.jar`.
  7. Create a directory named `files`
@@ -25,8 +25,8 @@ nginx, or any other server that supports PHP.
 ### Setting up the client
 All you need is a tape drive, a tape (32 mins recommended), and a computer.
 
- 1. Run `wget https://raw.githubusercontent.com/znepb/zMusic/master/zMusic.lua zmusic.lua` to download zMusic.
- 2. Run `wget https://github.com/znepb/zMusic/raw/master/config.lua config.lua` to download the config.
+ 1. Run `wget https://raw.githubusercontent.com/znepb-cc/zMusic/master/zMusic.lua zmusic.lua` to download zMusic.
+ 2. Run `wget https://github.com/znepb-cc/zMusic/raw/master/config.lua config.lua` to download the config.
  3. Run `edit config.lua` to edit the config.
  4. In the config, there are several values you must change. 
  5. Change `ip` to the IP of your server, or it's domain.
