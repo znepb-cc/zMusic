@@ -16,7 +16,7 @@ Lionray commit 725032428bfcbd503e53c5cafdd68f14810d0e9a
 nginx, or any other server that supports PHP.   
  2. Install JRE 8 to your server, and ffmpeg. Then, go to /var/www/html or where your server's files are located. 
  3. Download the latest version of youtube-dl, and download the latest version of [LionRay] (https://github.com/gamax92/LionRay).
- 4. Download [https://raw.githubusercontent.com/znepb/zMusic/master/index.php](https://raw.githubusercontent.com/znepb/zMusic-cc/master/index.php) to your server. (It does not have to be /index.php on the server, but it is recommended.
+ 4. Download [https://raw.githubusercontent.com/znepb-cc/zMusic/master/index.php](https://raw.githubusercontent.com/znepb-cc/zMusic-cc/master/index.php) to your server. (It does not have to be /index.php on the server, but it is recommended.
  5. If needed, change `$file`, `$webm`, and `$out` in your PHP file.
  6. Move youtube-dl to the folder where your php file is located, and same with LionRay. Rename LionRay to `lionray.jar`.
  7. Create a directory named `files`
